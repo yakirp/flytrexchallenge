@@ -7,18 +7,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.yakirp.flytrexchallenge.Utils.toHex;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String URL = "http://ec2-52-88-173-47.us-west-2.compute.amazonaws.com:8000/moviequotes/";
     private ListView listView;
+    private TextView paylod_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         listView = (ListView) findViewById(R.id.lvMovies);
+        paylod_tv = (TextView) findViewById(R.id.payload);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void fetchMoviesFromFlytrex() {
         new Thread(new Runnable() {
@@ -46,10 +54,13 @@ public class MainActivity extends AppCompatActivity {
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
-                    final List<FlytrexMovie> movies = new FlytrexMoviesParser().parse(response.body().bytes());
+                    final byte[] res = response.body().bytes();
+
+                    final List<FlytrexMovie> movies = new FlytrexMoviesParser().parse(res);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            paylod_tv.setText(toHex(new String(res)));
                             MoviesAdapter adapter = new MoviesAdapter(MainActivity.this, movies);
                             listView.setAdapter(adapter);
                         }

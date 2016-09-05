@@ -1,5 +1,7 @@
 package com.yakirp.flytrexchallenge;
 
+import java.math.BigInteger;
+
 /**
  * Created by yakirp on 8/30/2016.
  */
@@ -11,6 +13,23 @@ public class Utils {
             sum ^= b;
         }
         return sum;
+    }
+
+    public static String toHex(String arg) {
+        return String.format("%040x", new BigInteger(1, arg.getBytes(/*YOUR_CHARSET?*/)));
+    }
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        if (len==1) {
+            s= "0"+s;
+        }
+        len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
     }
 
     public static int hex2Decimal(String s) {
