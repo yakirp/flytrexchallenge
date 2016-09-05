@@ -17,6 +17,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.yakirp.flytrexchallenge.Utils.bytesToHex;
 import static com.yakirp.flytrexchallenge.Utils.toHex;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            paylod_tv.setText(toHex(new String(res)));
+                            paylod_tv.setText(bytesToHex(res));
                             MoviesAdapter adapter = new MoviesAdapter(MainActivity.this, movies);
                             listView.setAdapter(adapter);
                         }
